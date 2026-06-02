@@ -13,6 +13,13 @@ app.use(express.json());
 const PORT = process.env.PORT || 3001;
 
 /* ───────────────────────────────────────────────
+   HEALTHCHECK
+─────────────────────────────────────────────── */
+app.get('/', (req, res) => {
+  res.json({ status: "SUPRA API ONLINE" });
+});
+
+/* ───────────────────────────────────────────────
    CONFIGURAÇÃO
 ─────────────────────────────────────────────── */
 const CONFIG_FILE = path.join(__dirname, 'config.json');
@@ -127,6 +134,7 @@ app.get('/api/dashboard', (req, res) => {
 /* ───────────────────────────────────────────────
    START SERVER
 ─────────────────────────────────────────────── */
+
 app.listen(PORT, () => {
   console.log(`🔥 SUPRA rodando em http://localhost:${PORT}`);
 });
