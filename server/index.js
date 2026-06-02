@@ -9,20 +9,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 🔥 PORTA (OBRIGATÓRIO PARA DEPLOY)
+// 🔥 PORTA (Render)
 const PORT = process.env.PORT || 3001;
 
-// 🔥 FRONTEND BUILD (VITE DIST)
-const distPath = path.join(__dirname, '../client/dist');
-
-app.use(express.static(distPath));
-
-// fallback SPA (IMPORTANTE)
-app.get('*', (req, res) => {
-  res.sendFile(path.join(distPath, 'index.html'));
-});
-
-// ─── CONFIGURAÇÃO ───────────────────────────────────────────────
+/* ───────────────────────────────────────────────
+   CONFIGURAÇÃO
+─────────────────────────────────────────────── */
 const CONFIG_FILE = path.join(__dirname, 'config.json');
 
 function getConfig() {
@@ -36,7 +28,9 @@ function getConfig() {
   return JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8'));
 }
 
-// ─── CATEGORIZAÇÃO ───────────────────────────────────────────────
+/* ───────────────────────────────────────────────
+   CATEGORIZAÇÃO
+─────────────────────────────────────────────── */
 function categorizarItem(descricao) {
   const d = String(descricao || '').toUpperCase();
 
@@ -48,7 +42,9 @@ function categorizarItem(descricao) {
   return 'Outros';
 }
 
-// ─── LEITURA EXCEL ───────────────────────────────────────────────
+/* ───────────────────────────────────────────────
+   LEITURA EXCEL
+─────────────────────────────────────────────── */
 function lerExcel() {
   const filePath = getConfig().excelPath;
 
@@ -93,7 +89,13 @@ function lerExcel() {
   }).filter(i => i.cod && i.descricao);
 }
 
-// ─── ROTAS ───────────────────────────────────────────────────────
+/* ───────────────────────────────────────────────
+   ROTAS API
+─────────────────────────────────────────────── */
+
+app.get('/api', (req, res) => {
+  res.json({ status: "API rodando OK" });
+});
 
 app.get('/api/itens', (req, res) => {
   try {
@@ -122,7 +124,9 @@ app.get('/api/dashboard', (req, res) => {
   }
 });
 
-// ─── START SERVER ───────────────────────────────────────────────
+/* ───────────────────────────────────────────────
+   START SERVER
+─────────────────────────────────────────────── */
 app.listen(PORT, () => {
   console.log(`🔥 SUPRA rodando em http://localhost:${PORT}`);
 });
